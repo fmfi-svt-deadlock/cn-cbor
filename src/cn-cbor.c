@@ -13,7 +13,14 @@ extern "C" {
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+
+#ifndef CBOR_USE_MACHINE_ENDIAN
 #include <arpa/inet.h> // needed for ntohl (e.g.) on Linux
+#else
+#include <machine/endian.h>
+#define ntohs(x)  __ntohs((x))
+#define ntohl(x)  __ntohl((x))
+#endif
 
 #include "cn-cbor/cn-cbor.h"
 #include "cbor.h"

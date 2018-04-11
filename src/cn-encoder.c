@@ -8,7 +8,16 @@ extern "C" {
 } /* Duh. */
 #endif
 
-#include <arpa/inet.h>
+#ifndef CBOR_USE_MACHINE_ENDIAN
+#include <arpa/inet.h> // needed for ntohl (e.g.) on Linux
+#else
+#include <machine/endian.h>
+#define ntohs(x)  __ntohs((x))
+#define ntohl(x)  __ntohl((x))
+#define htons(x)  __htons((x))
+#define htonl(x)  __htonl((x))
+#endif
+
 #include <string.h>
 #include <strings.h>
 #include <stdbool.h>
