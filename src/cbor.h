@@ -72,24 +72,38 @@
 // interface, and they were quite confusing in cn-cbor.h
 
 #ifdef USE_CBOR_CONTEXT
+
 /**
  * Allocate enough space for 1 `cn_cbor` structure.
  *
  * @param[in]  ctx  The allocation context, or NULL for calloc.
  * @return          A pointer to a `cn_cbor` or NULL on failure
  */
+#ifndef CBOR_NO_STDLIB_REFERENCES
 #define CN_CALLOC(ctx) ((ctx) && (ctx)->calloc_func) ? \
     (ctx)->calloc_func(1, sizeof(cn_cbor), (ctx)->context) : \
     calloc(1, sizeof(cn_cbor));
+#else
+#define CN_CALLOC(ctx) ((ctx) && (ctx)->calloc_func) ? \
+    (ctx)->calloc_func(1, sizeof(cn_cbor), (ctx)->context) : \
+    NULL;
+#endif
 
 /**
- * Free a
- * @param  free_func [description]
- * @return           [description]
+ * Free a single `cn_cbor` structure
+ * @param[in]  ptr  Pointer to cn_cbor structure to free.
+ * @param[in]  ctx  The allocation context or NULL for free.
  */
+#ifndef CBOR_NO_STDLIB_REFERENCES
 #define CN_FREE(ptr, ctx) ((ctx) && (ctx)->free_func) ? \
     (ctx)->free_func((ptr), (ctx)->context) : \
     free((ptr));
+#else
+#define CN_FREE(ptr, ctx) if ((ctx) && (ctx)->free_func) { \
+    (ctx)->free_func((ptr), (ctx)->context); \
+}
+#endif
+
 
 #define CBOR_CONTEXT_PARAM , context
 #define CN_CALLOC_CONTEXT() CN_CALLOC(context)
