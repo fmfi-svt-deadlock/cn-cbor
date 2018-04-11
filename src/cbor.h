@@ -81,11 +81,11 @@
  */
 #ifndef CBOR_NO_STDLIB_REFERENCES
 #define CN_CALLOC(ctx) ((ctx) && (ctx)->calloc_func) ? \
-    (ctx)->calloc_func(1, sizeof(cn_cbor), (ctx)->context) : \
+    (ctx)->calloc_func((ctx)->context) : \
     calloc(1, sizeof(cn_cbor));
 #else
 #define CN_CALLOC(ctx) ((ctx) && (ctx)->calloc_func) ? \
-    (ctx)->calloc_func(1, sizeof(cn_cbor), (ctx)->context) : \
+    (ctx)->calloc_func((ctx)->context) : \
     NULL;
 #endif
 

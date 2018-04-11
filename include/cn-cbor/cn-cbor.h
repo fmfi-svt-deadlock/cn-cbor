@@ -164,28 +164,24 @@ typedef struct cn_cbor_errback {
 #ifdef USE_CBOR_CONTEXT
 
 /**
- * Allocate and zero out memory.  `count` elements of `size` are required,
- * as for `calloc(3)`.  The `context` is the `cn_cbor_context` passed in
- * earlier to the CBOR routine.
+ * Allocate and zero out memory for a single cn_cbor structure.
+ * The `context` is the `cn_cbor_context.context` passed in earlier to the CBOR routine.
  *
- * @param[in] count   The number of items to allocate
- * @param[in] size    The size of each item
  * @param[in] context The allocation context
  */
-typedef void* (*cn_calloc_func)(size_t count, size_t size, void *context);
+typedef cn_cbor* (*cn_calloc_func)(void *context);
 
 /**
  * Free memory previously allocated with a context.  If using a pool allocator,
- * this function will often be a no-op, but it must be supplied in order to
- * prevent the CBOR library from calling `free(3)`.
+ * this function will often be a no-op.
  *
  * @note: it may be that this is never needed; if so, it will be removed for
  * clarity and speed.
  *
- * @param  context [description]
- * @return         [description]
+ * @param  ptr     The structure to deallocate
+ * @param  context The allocation context
  */
-typedef void (*cn_free_func)(void *ptr, void *context);
+typedef void (*cn_free_func)(cn_cbor *ptr, void *context);
 
 /**
  * The allocation context.
